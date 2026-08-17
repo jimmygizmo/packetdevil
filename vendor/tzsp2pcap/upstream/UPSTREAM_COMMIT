@@ -1,0 +1,7 @@
+Upstream repository: TODO — record actual URL once vendored, e.g.
+https://github.com/<owner>/tzsp2pcap
+
+Pinned commit/tag: TODO — record exact commit SHA or release tag.
+
+Do not build from this placeholder until the real upstream source has been
+vendored here. See ../README.md for the vendoring procedure.

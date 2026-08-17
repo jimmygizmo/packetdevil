@@ -1,0 +1,10 @@
+# tzsp2pcap runtime configuration template.
+# Exact key names depend on the patch adding config-file support — see
+# vendor/tzsp2pcap/README.md and docs/reference/tzsp2pcap-config-reference.md.
+# Copy to a real, untracked path (e.g. /etc/tzsp2pcap/tzsp2pcap.conf) and
+# reference it from the systemd unit ExecStart.
+
+listen_port = 37008
+bind_address = 0.0.0.0
+output_mode = interface
+output_target = dummy0

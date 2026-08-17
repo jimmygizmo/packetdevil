@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- packetdevil project-specific ---
+# Real, filled-in configs (templates in configs/*.example.* are tracked, these are not)
+/etc/packetdevil/
+*.local.yaml
+*.local.yml
+
+# tzsp2pcap vendored build output (see vendor/tzsp2pcap/README.md)
+vendor/tzsp2pcap/build/
+
+# Captured traffic / pcaps (may contain sensitive payloads — never commit)
+*.pcap
+*.pcapng
+
+# Local incident logs (may contain sensitive IPs/details, see docs/operations/runbooks/incident-response.md)
+/incidents/
+

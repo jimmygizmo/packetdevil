@@ -1,0 +1,25 @@
+# Runtime dev/config for the packetdevil Python app.
+# Fill in real values in a copy at /etc/packetdevil/config.yaml — never commit real values.
+# Secrets may also be supplied via environment variables (see docs/reference/firewall-api-reference.md):
+#   PACKETDEVIL_ROUTEROS_USERNAME, PACKETDEVIL_ROUTEROS_PASSWORD,
+#   PACKETDEVIL_TELEGRAM_BOT_TOKEN, PACKETDEVIL_TELEGRAM_CHAT_ID
+
+eve_json_path: /var/log/suricata/eve.json
+dry_run: false
+
+routeros:
+  host: "192.0.2.1"          # RB5009 LAN IP
+  username: "packetdevil-api" # dedicated least-privilege API user, see docs/reference/firewall-api-reference.md
+  password: "CHANGE_ME"       # prefer PACKETDEVIL_ROUTEROS_PASSWORD env var instead of storing here
+  verify_tls: true
+  timeout_seconds: 5.0
+
+telegram:
+  bot_token: "CHANGE_ME"      # prefer PACKETDEVIL_TELEGRAM_BOT_TOKEN env var
+  chat_id: "CHANGE_ME"        # prefer PACKETDEVIL_TELEGRAM_CHAT_ID env var
+  min_severity: 1             # Suricata severity <= this also triggers a Telegram message
+
+blocking:
+  max_severity_to_block: 2    # Suricata severity <= this creates a temporary firewall block
+  ttl_minutes: 60
+  comment_prefix: "packetdevil:block"

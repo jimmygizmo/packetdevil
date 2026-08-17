@@ -1,0 +1,16 @@
+[Unit]
+Description=packetdevil - Suricata alert triage (RouterOS blocking + Telegram alerts)
+After=network-online.target suricata.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=packetdevil
+WorkingDirectory=/opt/packetdevil/src/packetdevil
+# Requires `uv` on PATH for the service user, or use an absolute path (e.g. /root/.local/bin/uv).
+ExecStart=uv run packetdevil --config /etc/packetdevil/config.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

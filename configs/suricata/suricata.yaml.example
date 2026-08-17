@@ -1,0 +1,25 @@
+# af-packet capture + EVE JSON output template for packetdevil.
+# Copy relevant sections into /etc/suricata/suricata.yaml — do not replace the
+# whole distro-provided file wholesale; merge these settings in.
+# See docs/reference/suricata-config-reference.md and
+# docs/setup/04-suricata-install.md for context.
+
+af-packet:
+  - interface: dummy0
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    # threads: 4   # uncomment and tune per docs/scenarios/scenario-high-traffic-tuning.md
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert:
+            tagged-packets: yes
+            metadata: yes
+        - stats:
+            totals: yes
+            threads: false

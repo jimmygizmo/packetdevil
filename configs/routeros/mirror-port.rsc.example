@@ -1,0 +1,10 @@
+# Example RouterOS mirror configuration (placeholders only).
+# See docs/setup/01-mikrotik-rb5009-port-mirroring.md and
+# docs/reference/routeros-commands.md before running any of this against
+# real hardware — replace every <PLACEHOLDER> and confirm blast radius.
+#
+# Blast radius: enables continuous packet sniffing/streaming on the named
+# WAN interface; consumes router CPU proportional to WAN throughput.
+
+/tool sniffer set streaming-enabled=yes streaming-server=<SURICATA_HOST_IP> filter-interface=<WAN_INTERFACE>
+/tool sniffer start

@@ -1,0 +1,15 @@
+[Unit]
+Description=tzsp2pcap - decapsulate RouterOS TZSP mirror traffic onto dummy0
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/sbin/ip link show dummy0
+ExecStart=/usr/local/bin/tzsp2pcap --config /etc/tzsp2pcap/tzsp2pcap.conf
+Restart=on-failure
+RestartSec=5
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+
+[Install]
+WantedBy=multi-user.target
