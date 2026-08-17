@@ -4,7 +4,8 @@
 #          exposure the way an external attacker's recon scan would, and
 #          confirm Suricata/packetdevil detect and react to it.
 # Requires: nmap installed (see scripts/linux/install-test-tool-prereqs.sh);
-#           root/CAP_NET_RAW for the SYN scan (-sS) to run as intended.
+#           root/CAP_NET_RAW for the SYN scan (-sS) to run as intended;
+#           MUST be run from a host OUTSIDE your own network (see usage).
 # Rollback: N/A — read-only network probe, nothing to undo.
 set -euo pipefail
 
@@ -26,6 +27,17 @@ Runs: nmap -sS -sV -Pn <YOUR_PUBLIC_IP>
   you do not own or control without permission may be illegal and may
   violate your ISP's terms of service. This script is for testing your
   own packetdevil/Suricata detection pipeline, nothing else.
+
+  IMPORTANT — RUN THIS FROM OUTSIDE YOUR OWN NETWORK, not from a host on
+  your LAN or the Suricata box itself. Traffic that never leaves your LAN
+  never crosses the RB5009's WAN interface, so it will NOT be mirrored to
+  Suricata and this test will prove nothing. SSH into an external host you
+  control (a cheap/free-tier VPS, a cloud shell, etc.) and run this script
+  from there, targeting your public IP.
+
+  No external host available? Trigger a one-off nmap scan of your public
+  IP from this free web service instead:
+  http://hackertarget.com/nmap-online-port-scanner/
 
 Options:
   -y, --yes     Skip the interactive "is this your own IP" confirmation
@@ -68,8 +80,12 @@ fi
 
 echo "WARNING: about to port-scan ${target}."
 echo "Only proceed if this is an IP address you own or are explicitly authorized to test."
+echo "IMPORTANT: this must be run from a host OUTSIDE your own network (e.g. via"
+echo "SSH to an external VPS) — from inside your LAN, traffic never crosses the"
+echo "RB5009's WAN interface and Suricata will never see it. No external host?"
+echo "Use http://hackertarget.com/nmap-online-port-scanner/ instead."
 if [[ "${skip_confirm}" -ne 1 ]]; then
-  read -r -p "Is ${target} your own IP and are you authorized to scan it? [y/N] " reply
+  read -r -p "Is ${target} your own IP, are you authorized to scan it, and are you running this from OUTSIDE your network? [y/N] " reply
   if [[ ! "${reply}" =~ ^[Yy]$ ]]; then
     echo "aborted: confirmation not given"
     exit 1

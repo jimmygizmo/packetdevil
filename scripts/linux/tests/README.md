@@ -24,6 +24,19 @@ and may violate your ISP's terms of service. Each script:
 - requires interactive confirmation before running, unless `-y`/`--yes`
   is passed for scripted use.
 
+## ⚠️ Run from OUTSIDE your own network
+
+Scripts that target your public WAN IP (like `simulate-port-scan.sh`)
+**must be run from a host outside your own network** — e.g. SSH into an
+external VPS/cloud host you control, or a cloud shell, and run the script
+from there. If you run it from inside your own LAN or from the Suricata
+box itself, the traffic never crosses the RB5009's WAN interface, so it
+is never mirrored to Suricata and the test proves nothing.
+
+No external host available? Trigger a one-off nmap scan of your public IP
+using this free web service instead:
+<http://hackertarget.com/nmap-online-port-scanner/>
+
 ## Prerequisites
 
 Install every tool these scripts depend on (currently: `nmap`) via:
