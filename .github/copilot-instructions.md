@@ -46,7 +46,8 @@ human has explicitly asked you to run them right now:
 See [.github/instructions/python.instructions.md](instructions/python.instructions.md)
 for full detail. Quick facts: package lives in `src/packetdevil/packetdevil/`,
 managed with `uv` (never bare `pip`/`venv`), use `ruff` + `black`, tests in
-`src/packetdevil/tests/`, run via `uv run pytest` from `src/packetdevil/`.
+`src/packetdevil/tests/`, run everything at once via
+`scripts/python/run-checks.sh` (or `uv run pytest` from `src/packetdevil/`).
 
 ## Documentation conventions (quick reference)
 

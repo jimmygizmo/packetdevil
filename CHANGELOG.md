@@ -20,3 +20,7 @@ follows [Keep a Changelog](https://keepachangelog.com/); dates are
   notifier, CLI), managed with `uv`, with an initial test suite.
 - `configs/` and `scripts/` templates for Suricata, `tzsp2pcap`,
   `packetdevil`, and RouterOS mirror configuration.
+- `scripts/python/run-checks.sh`: consolidated, documented wrapper around
+  `uv run pytest`/`ruff`/`black` (with `--fix`/`--no-tests`/`--help`),
+  callable from anywhere in the repo. Replaces two ad hoc, overlapping
+  shell one-offs.

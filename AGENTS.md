@@ -113,8 +113,9 @@ can **create live firewall rules automatically**. Treat these with care:
 - [ ] New scripts are idempotent where possible and documented with a
       "what this does / how to verify / how to undo" section.
 - [ ] Secrets are not present anywhere in the diff.
-- [ ] Python changes pass `uv run ruff check .` and `uv run pytest`, and
-      `uv.lock` is committed if dependencies changed (see
+- [ ] Python changes pass `scripts/python/run-checks.sh` (or the
+      equivalent `uv run pytest`/`uv run ruff check .`/`uv run black --check .`),
+      and `uv.lock` is committed if dependencies changed (see
       [src/packetdevil/README.md](src/packetdevil/README.md)).
 - [ ] If behavior affects a documented scenario in `docs/scenarios/`, that
       scenario doc is updated.

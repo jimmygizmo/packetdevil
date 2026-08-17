@@ -15,6 +15,10 @@ applyTo: "src/packetdevil/**/*.py"
   uv run ruff check .
   uv run black --check .
   ```
+  Or use [scripts/python/run-checks.sh](../../scripts/python/run-checks.sh)
+  (works from anywhere in the repo; `--fix` to auto-fix/reformat,
+  `--no-tests` to skip pytest, `--help` for details) instead of running
+  each `uv` command by hand.
   Add dependencies with `uv add <pkg>` / `uv add --dev <pkg>` (never edit
   `dependencies`/`dependency-groups` in `pyproject.toml` by hand and then
   forget to run `uv lock`/`uv sync` — the lock file must stay in sync).

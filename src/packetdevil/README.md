@@ -40,6 +40,15 @@ uv run black --check .
 uv run pytest
 ```
 
+Or run all of the above (tests + lint + format check) in one call from
+anywhere in the repo via [scripts/python/run-checks.sh](../../scripts/python/run-checks.sh):
+
+```bash
+scripts/python/run-checks.sh            # tests + lint + format check
+scripts/python/run-checks.sh --fix      # auto-fix lint + reformat before committing
+scripts/python/run-checks.sh --help     # see all options
+```
+
 Adding a dependency: `uv add <package>` (runtime) or
 `uv add --dev <package>` (dev-only). Commit the updated `pyproject.toml`
 and `uv.lock` together.
