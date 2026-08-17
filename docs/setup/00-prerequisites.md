@@ -70,3 +70,7 @@ Continue to
 
 - [docs/architecture/overview.md](../architecture/overview.md)
 - [docs/architecture/network-topology.md](../architecture/network-topology.md)
+- [docs/operations/testing.md](../operations/testing.md) — optional, only
+  needed once the pipeline is running end to end and you want to validate
+  detection with ad-hoc test scripts (installs `nmap` etc. separately via
+  `scripts/linux/install-test-tool-prereqs.sh`, not required up front).

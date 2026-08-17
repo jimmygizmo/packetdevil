@@ -55,6 +55,7 @@ next):
 |---|---|
 | [monitoring.md](operations/monitoring.md) | What to watch, per component, and what healthy looks like. |
 | [troubleshooting.md](operations/troubleshooting.md) | Symptom-indexed troubleshooting across the whole pipeline. |
+| [testing.md](operations/testing.md) | Manual/ad-hoc detection validation scripts (e.g. simulated port scans) and how to run them safely. |
 | [runbooks/](operations/runbooks/) | Restart Suricata, rotate logs, update rules, incident response. |
 
 ## scenarios/ — deployment variants
@@ -73,6 +74,7 @@ next):
 | [../src/packetdevil/README.md](../src/packetdevil/README.md) | Python app dev workflow (`uv`, tests, layout). |
 | [../configs/README.md](../configs/README.md) | Config template conventions. |
 | [../scripts/README.md](../scripts/README.md) | Helper script conventions. |
+| [../scripts/linux/tests/README.md](../scripts/linux/tests/README.md) | Ad-hoc detection-validation scripts (safety rules, adding new ones). |
 
 ## Maintenance rule
 

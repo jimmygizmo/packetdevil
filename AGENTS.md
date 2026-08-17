@@ -27,6 +27,14 @@ This is a home/small-business lab project but is built to production
 engineering standards. Contributors are senior engineers; documentation is
 optimized for **AI agents first**, humans second — but both must be excellent.
 
+> **Standing meta-directive:** this repo is also a deliberate case study in
+> structuring a complex project for agentic AI development. When given a
+> general (not task-specific) instruction about how to optimize this repo
+> for AI-agent development, capture it durably (ADR, this file, a scoped
+> `.instructions.md` rule, or a `docs/` convention) in addition to applying
+> it — don't let it live only in chat history. See
+> [ADR 0003](docs/architecture/decisions/0003-ai-engineering-case-study.md).
+
 ## 2. Repo map (read docs, not just code)
 
 ```

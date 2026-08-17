@@ -24,3 +24,13 @@ follows [Keep a Changelog](https://keepachangelog.com/); dates are
   `uv run pytest`/`ruff`/`black` (with `--fix`/`--no-tests`/`--help`),
   callable from anywhere in the repo. Replaces two ad hoc, overlapping
   shell one-offs.
+- `scripts/linux/tests/`: ad-hoc, manually-run detection-validation
+  scripts (starting with `simulate-port-scan.sh`, an `nmap -sS -sV -Pn`
+  wrapper with required-target/confirmation safety guards) plus
+  `scripts/linux/install-test-tool-prereqs.sh` and
+  [docs/operations/testing.md](docs/operations/testing.md).
+- [ADR 0003](docs/architecture/decisions/0003-ai-engineering-case-study.md):
+  recorded the standing directive that this repo is also a case study in
+  agentic AI software engineering, and that general AI-optimization
+  instructions should be captured durably (ADR/AGENTS.md/instructions/docs
+  convention), not just applied once.

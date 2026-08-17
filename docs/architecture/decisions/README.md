@@ -20,6 +20,7 @@ should be revisited (e.g. because a stated assumption changed).
 |---|---|---|
 | [0001](0001-tzsp2pcap-fork-strategy.md) | tzsp2pcap fork/vendor strategy | Accepted |
 | [0002](0002-suricata-deployment.md) | Suricata deployed as passive IDS (mirror), not inline IPS | Accepted |
+| [0003](0003-ai-engineering-case-study.md) | This repo doubles as a case study in agentic AI software engineering | Accepted |
 
 ## Creating a new ADR
 
