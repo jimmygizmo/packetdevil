@@ -33,7 +33,9 @@ these are already true and will not re-check them.
   - Debian 12 or Ubuntu 22.04+ (other distros not yet documented — if you
     use one, add a new scenario doc rather than editing the baseline).
   - `git`, `build-essential` (for compiling `tzsp2pcap`), `python3.11+`,
-    `pip`/`uv`.
+    `pip`/`uv`, `jq` (used by
+    [scripts/linux/tail-suricata-eve-alerts.sh](../../scripts/linux/tail-suricata-eve-alerts.sh)
+    and throughout `docs/operations/` for inspecting `eve.json`).
 - **Network planning decisions** (write these down before proceeding —
   they're referenced throughout later docs):
   - Which RouterOS interface is "WAN" (to be mirrored).
@@ -72,5 +74,5 @@ Continue to
 - [docs/architecture/network-topology.md](../architecture/network-topology.md)
 - [docs/operations/testing.md](../operations/testing.md) — optional, only
   needed once the pipeline is running end to end and you want to validate
-  detection with ad-hoc test scripts (installs `nmap` etc. separately via
-  `scripts/linux/install-test-tool-prereqs.sh`, not required up front).
+  detection with ad-hoc test scripts under `scripts/linux/tests/`, not
+  required up front.

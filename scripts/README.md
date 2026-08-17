@@ -13,9 +13,14 @@ scripts/
   linux/
     setup-dummy-interface.sh   # see docs/setup/02-linux-dummy-interface.md
     install-suricata.sh        # see docs/setup/04-suricata-install.md
-    install-test-tool-prereqs.sh # installs nmap etc. for scripts/linux/tests/
+    tail-suricata-eve-alerts.sh # tail eve.json alerts, compactly; see docs/reference/linux-commands.md
     tests/                     # ad-hoc, manually-run detection validation scripts
-      simulate-port-scan.sh      # see docs/operations/testing.md
+      README.md                  # internal vs external testing concept, see docs/operations/testing.md
+      external/                  # run from a host OUTSIDE your network
+        install-external-test-tool-prereqs.sh
+        simulate-port-scan.sh
+      internal/                  # run from a host INSIDE your LAN
+        simulate-password-in-clear.sh
   python/
     run-checks.sh              # pytest + ruff + black via uv; --fix / --no-tests / --help
   routeros/

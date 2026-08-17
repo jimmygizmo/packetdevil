@@ -70,6 +70,15 @@ where a bug in one component could hide a symptom in another.
   succeeding.
 - If Telegram is unreachable, blocking must still proceed — notification
   failures must never suppress a defensive action.
+- Alerts triggered by traffic *originating* inside your own LAN (e.g. a
+  compromised internal host phoning home) are only visible to Suricata
+  after the RB5009's NAT rewrites the source address on the WAN mirror —
+  so `src_ip` on such an alert is your network's public (NAT'd) IP, not
+  the internal host's private IP. Keep this in mind when interpreting
+  alerts or reasoning about what a resulting temporary block actually
+  covers — see
+  [docs/operations/testing.md](../operations/testing.md) for a concrete
+  example (`scripts/linux/tests/internal/simulate-password-in-clear.sh`).
 
 ## See also
 

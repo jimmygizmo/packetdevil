@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Script: scripts/linux/tests/simulate-port-scan.sh
+# Script: scripts/linux/tests/external/simulate-port-scan.sh
 # Purpose: run an nmap SYN/version scan against a single IP, to see your WAN
 #          exposure the way an external attacker's recon scan would, and
 #          confirm Suricata/packetdevil detect and react to it.
-# Requires: nmap installed (see scripts/linux/install-test-tool-prereqs.sh);
+# Requires: nmap installed (see
+#           scripts/linux/tests/external/install-external-test-tool-prereqs.sh);
 #           root/CAP_NET_RAW for the SYN scan (-sS) to run as intended;
 #           MUST be run from a host OUTSIDE your own network (see usage).
 # Rollback: N/A — read-only network probe, nothing to undo.
@@ -93,7 +94,7 @@ if [[ "${skip_confirm}" -ne 1 ]]; then
 fi
 
 if ! command -v nmap &>/dev/null; then
-  echo "error: nmap is not installed. Run scripts/linux/install-test-tool-prereqs.sh first." >&2
+  echo "error: nmap is not installed. Run scripts/linux/tests/external/install-external-test-tool-prereqs.sh first." >&2
   exit 1
 fi
 

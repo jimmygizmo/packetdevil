@@ -52,6 +52,12 @@ sudo tail -f /var/log/suricata/eve.json
 sudo tail -f /var/log/suricata/eve.json | jq 'select(.event_type=="alert")'
 ```
 
+Or use the packaged helper (same filter, plus a `-a`/full-record option):
+
+```bash
+sudo scripts/linux/tail-suricata-eve-alerts.sh
+```
+
 ## Firewall on the Linux box itself (host-level, not RouterOS)
 
 The Linux box's own host firewall must permit inbound UDP 37008 (TZSP)

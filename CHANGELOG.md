@@ -25,10 +25,11 @@ follows [Keep a Changelog](https://keepachangelog.com/); dates are
   callable from anywhere in the repo. Replaces two ad hoc, overlapping
   shell one-offs.
 - `scripts/linux/tests/`: ad-hoc, manually-run detection-validation
-  scripts (starting with `simulate-port-scan.sh`, an `nmap -sS -sV -Pn`
-  wrapper with required-target/confirmation safety guards) plus
-  `scripts/linux/install-test-tool-prereqs.sh` and
-  [docs/operations/testing.md](docs/operations/testing.md).
+  scripts, split into `external/` (run from outside your network, e.g.
+  `simulate-port-scan.sh`) and `internal/` (run from inside your LAN,
+  e.g. `simulate-password-in-clear.sh`), each with its own prereqs and
+  README, plus [docs/operations/testing.md](docs/operations/testing.md)
+  and a `tail-suricata-eve-alerts.sh` helper.
 - [ADR 0003](docs/architecture/decisions/0003-ai-engineering-case-study.md):
   recorded the standing directive that this repo is also a case study in
   agentic AI software engineering, and that general AI-optimization
