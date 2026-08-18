@@ -1,7 +1,7 @@
 ---
 title: Manual Detection Testing
 status: draft
-last_verified: 2026-08-17
+last_verified: 2026-08-18
 applies_to:
   - Suricata 7.x
   - Debian 12 / Ubuntu 22.04+
@@ -12,108 +12,92 @@ owner_domain: architecture
 
 ## Purpose
 
-How to validate, end to end, that the detection pipeline actually works —
-by generating real (authorized, harmless) attack-shaped traffic and
-confirming Suricata alerts and `packetdevil` reacts correctly. This
-complements, but is separate from, the automated `pytest` suite in
-[src/packetdevil/tests/](../../src/packetdevil/tests/), which only tests
-the Python app's logic in isolation with mocked network calls.
+This is how to validate the end-to-end detection pipeline with real traffic
+that is explicitly authorized and harmless. The project now uses a single
+Python runner at [scripts/linux/tests/simulations.py](../../scripts/linux/tests/simulations.py)
+for all host setup and simulation commands, rather than maintaining separate
+shell scripts in internal/external subdirectories.
 
-## Why these are manual/ad-hoc, not automated tests (for now)
+This complements the automated `pytest` suite in
+[src/packetdevil/tests/](../../src/packetdevil/tests/), which exercises the
+Python app's logic in isolation.
 
-Exercising the full pipeline (RouterOS mirror → `tzsp2pcap` → Suricata →
-`packetdevil` → RouterOS block / Telegram) requires real network traffic
-against real (or lab) hardware. That's valuable but environment-dependent
-and slower than a unit test, so — as of this writing — these scripts are
-run by hand when validating a deployment or a rule/config change, not
-wired into CI or `scripts/python/run-checks.sh`. If/when this project adds
-a repeatable lab environment (e.g. containerized), revisit this decision.
+## Why this remains manual/ad-hoc
 
-## Two kinds of test: external vs. internal
+The full path still depends on real network traffic crossing the RB5009's
+WAN interface (see [docs/architecture/data-flow.md](../architecture/data-flow.md)).
+That makes it environment-dependent and slower than a unit test, but it is
+still the best way to confirm that Suricata sees the traffic and that
+`packetdevil` reacts appropriately.
 
-The RB5009's mirror only sees traffic that crosses its **WAN** interface
-(see [docs/architecture/data-flow.md](../architecture/data-flow.md)), so
-*where a test is run from* determines what it actually exercises:
+## Two kinds of validation traffic
 
-| Category | Simulates | Run from | Scripts |
-|---|---|---|---|
-| **External** | An attacker on the Internet probing/attacking your public IP. | A host **outside** your own network (VPS, cloud shell). | [scripts/linux/tests/external/](../../scripts/linux/tests/external/) |
-| **Internal** | A compromised/misbehaving host inside your LAN (cleartext credentials, phoning home, etc.). | A host **inside** your own LAN, behind the RB5009. | [scripts/linux/tests/internal/](../../scripts/linux/tests/internal/) |
+The RB5009 only mirrors traffic that crosses its **WAN** interface, so the
+location of the host matters:
 
-See [scripts/linux/tests/README.md](../../scripts/linux/tests/README.md)
-for the full rationale and safety rules common to both, and each
-subdirectory's own README for category-specific details.
+| Category | Simulates | Run from |
+|---|---|---|
+| **External** | Internet-side recon / attack patterns against your public IP. | A host **outside** your own network (VPS, cloud shell). |
+| **Internal** | Misbehaving or compromised host behavior inside your LAN. | A host **inside** your own LAN, behind the RB5009. |
 
-## Prerequisites
+The unified runner covers both cases in one place: see
+[scripts/linux/tests/README.md](../../scripts/linux/tests/README.md).
 
-**External** tests: install tools **on the external host** you'll run them
-from, not on your packetdevil/Suricata box — assume a bare/minimal host
-and install everything explicitly, never rely on preinstalled tools:
+## Setup and prerequisites
+
+Use the Python runner to check and repair prerequisites for the correct host
+category:
+
 ```bash
-sudo scripts/linux/tests/external/install-external-test-tool-prereqs.sh
+python3 scripts/linux/tests/simulations.py --setup
 ```
 
-**Internal** tests: install tools **on the internal test host**, inside
-your own LAN behind the RB5009 — same assume-nothing-is-installed
-approach:
-```bash
-sudo scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh
-```
+This checks the required tools, installs missing packages when necessary,
+and creates the local setup directory state used by the runner.
 
-See each subdirectory's README
-([external](../../scripts/linux/tests/external/README.md),
-[internal](../../scripts/linux/tests/internal/README.md)) for exactly
-which tools each installs and why.
+For external tests, it will also store and reuse a public IP address that
+it finds or the user provides. The stored path is:
+
+```text
+/tmp/packetdevil-test-hosts/external/public_ip.txt
+```
 
 ## Safety — read before running anything here
 
-**External** scripts must only ever target an IP you own or are
-explicitly authorized to test. **Internal** scripts only ever send
-dummy/test data to public services designed for that purpose (e.g.
-httpbun.com's Basic Auth test endpoint) — never real credentials. See
-[scripts/linux/tests/README.md](../../scripts/linux/tests/README.md) and
-the relevant subdirectory README for full details — every script enforces
-this with printed warnings and an interactive confirmation prompt.
+- External tests must only target an IP you own or are explicitly
+  authorized to test.
+- Internal tests must be run from a host inside your own LAN and must use
+  controlled, dummy, or public test endpoints only.
+- Never send real credentials or attack third-party infrastructure without
+  explicit permission.
 
-## Run from the correct vantage point
+## Available simulation actions
 
-- **External** scripts (e.g. `simulate-port-scan.sh`) **must be run from
-  a host outside your own network** — SSH into an external VPS/cloud host
-  you control and run them from there. From inside your own LAN, traffic
-  never crosses the RB5009's WAN interface, so it's never mirrored to
-  Suricata and the test proves nothing. No external host available? Use
-  this free web service to trigger a one-off nmap scan of your public IP
-  instead: <http://hackertarget.com/nmap-online-port-scanner/>
-- **Internal** scripts (e.g. `simulate-password-in-clear.sh`) **must be
-  run from a host inside your own LAN**, behind the RB5009, so the
-  outbound traffic gets NAT'd and mirrored the way a real internal host's
-  traffic would be. Note: the resulting alert's `src_ip` will be your
-  network's public (NAT'd) IP, not the internal host's private IP — see
-  [docs/architecture/data-flow.md](../architecture/data-flow.md).
+| Mode | Purpose |
+|---|---|
+| `--internal-tor` | Simulate outbound Tor-related DNS activity from an internal host. |
+| `--internal-crypto` | Simulate outbound crypto-mining DNS activity from an internal host. |
+| `--internal-scammer` | Simulate a tech-support scammer remote-control check-in pattern from an internal host. |
+| `--internal-password` | Simulate cleartext credentials over HTTP Basic Auth from an internal host. |
+| `--internal-all` | Run the internal outbound simulations. |
+| `--external-scan` | Simulate inbound port scanning against your public IP from an external host. |
+| `--external-all` | Run the external inbound simulations. |
 
-## Available test scripts
+## Example commands
 
-| Script | Category | Simulates | Expected result |
-|---|---|---|---|
-| [scripts/linux/tests/external/simulate-port-scan.sh](../../scripts/linux/tests/external/simulate-port-scan.sh) | External | `nmap -sS -sV -Pn <ip>` against your own public IP, run from an external host. | Suricata logs a recon/port-scan category alert in `eve.json`; `packetdevil` may create a temporary block against the scanning host (the external host you ran it from, or hackertarget.com's scanning IP if you used the web service). |
-| [scripts/linux/tests/internal/simulate-password-in-clear.sh](../../scripts/linux/tests/internal/simulate-password-in-clear.sh) | Internal | `curl -su user:pass <url>` — dummy HTTP Basic Auth credentials sent in cleartext, run from inside your LAN. | Suricata logs a cleartext-credential/policy-violation alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
-| [scripts/linux/tests/internal/simulate-browser-crypto-mining.sh](../../scripts/linux/tests/internal/simulate-browser-crypto-mining.sh) | Internal | `dig +short <domain> @<resolver>` — DNS lookup of a known cryptocurrency mining-pool domain, run from inside your LAN. | Suricata logs a DNS reputation/threat-intel alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
-| [scripts/linux/tests/internal/simulate-tor-activity.sh](../../scripts/linux/tests/internal/simulate-tor-activity.sh) | Internal | `dig +short <domain> @<resolver>` — DNS lookup of a `.onion` (Tor hidden service) address, run from inside your LAN. | Suricata logs a Tor-usage policy alert (query is expected to return NXDOMAIN — the lookup attempt itself is the signal); `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
-| [scripts/linux/tests/internal/simulate-tech-support-scammer.sh](../../scripts/linux/tests/internal/simulate-tech-support-scammer.sh) | Internal | `openssl s_client` TLS handshake against AnyDesk's real check-in host, run from inside your LAN. | Suricata logs a remote-access-tool detection alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
-
-Remove any resulting rule afterward rather than waiting out the TTL if you
-need connectivity restored immediately — see
-[docs/operations/runbooks/incident-response.md](runbooks/incident-response.md).
+```bash
+python3 scripts/linux/tests/simulations.py --internal-all
+python3 scripts/linux/tests/simulations.py --external-scan --public-ip=203.0.113.10
+python3 scripts/linux/tests/simulations.py --external-all
+```
 
 ## Running a test end to end
 
 1. Confirm the baseline pipeline is healthy first —
    [docs/operations/monitoring.md](monitoring.md).
-2. Position yourself at the correct vantage point (external host or
-   internal LAN host, per the table above) and run the relevant script
-   (or trigger the hackertarget.com web scan for external tests without a
-   VPS).
-3. Watch for the alert, back on the Suricata box:
+2. Run the correct command from the correct host vantage point (internal
+   LAN host or external VPS/cloud shell).
+3. Watch the Suricata alert stream:
    ```bash
    sudo scripts/linux/tail-suricata-eve-alerts.sh
    ```
@@ -121,10 +105,9 @@ need connectivity restored immediately — see
    ```bash
    sudo journalctl -u packetdevil -f
    ```
-5. If a block rule was created, remove it manually rather than waiting
-   out the TTL once you've confirmed detection worked — see
+5. If a temporary block rule was created, remove it manually rather than
+   waiting out the TTL once validation is complete — see
    [docs/reference/routeros-commands.md](../reference/routeros-commands.md).
-
 
 ## See also
 

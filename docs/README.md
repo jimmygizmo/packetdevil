@@ -74,7 +74,7 @@ next):
 | [../src/packetdevil/README.md](../src/packetdevil/README.md) | Python app dev workflow (`uv`, tests, layout). |
 | [../configs/README.md](../configs/README.md) | Config template conventions. |
 | [../scripts/README.md](../scripts/README.md) | Helper script conventions. |
-| [../scripts/linux/tests/README.md](../scripts/linux/tests/README.md) | Ad-hoc detection-validation scripts (safety rules, adding new ones). |
+| [../scripts/linux/tests/README.md](../scripts/linux/tests/README.md) | Unified Python simulation runner and setup workflow for internal/external validation traffic. |
 
 ## Maintenance rule
 

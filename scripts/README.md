@@ -11,28 +11,18 @@ to be idempotent — safe to re-run.
 ```
 scripts/
   linux/
-    setup-dummy-interface.sh   # see docs/setup/02-linux-dummy-interface.md
-    install-suricata.sh        # see docs/setup/04-suricata-install.md
-    tail-suricata-fast-log.sh  # tail raw fast.log stream; see docs/reference/linux-commands.md
-    tail-suricata-eve-alerts.sh # tail eve.json alerts, compactly; see docs/reference/linux-commands.md
-    tests/                     # ad-hoc, manually-run detection validation scripts
-      README.md                  # internal vs external testing concept, see docs/operations/testing.md
-      external/                  # run from a host OUTSIDE your network
-        README.md
-        install-external-test-tool-prereqs.sh
-        simulate-port-scan.sh
-      internal/                  # run from a host INSIDE your LAN
-        README.md
-        install-internal-test-tool-prereqs.sh
-        simulate-password-in-clear.sh
-        simulate-browser-crypto-mining.sh
-        simulate-tor-activity.sh
-        simulate-tech-support-scammer.sh
+    setup-dummy-interface.sh      # see docs/setup/02-linux-dummy-interface.md
+    install-suricata.sh           # see docs/setup/04-suricata-install.md
+    tail-suricata-fast-log.sh     # tail raw fast.log stream; see docs/reference/linux-commands.md
+    tail-suricata-eve-alerts.sh   # tail eve.json alerts, compactly; see docs/reference/linux-commands.md
+    tests/
+      README.md                   # unified validation runner and setup guidance
+      simulations.py              # central simulation + prerequisite setup program
   python/
-    run-checks.sh              # pytest + ruff + black via uv; --fix / --no-tests / --help
+    run-checks.sh                 # pytest + ruff + black via uv; --fix / --no-tests / --help
   routeros/
-    configure-port-mirror.rsc  # see docs/setup/01-mikrotik-rb5009-port-mirroring.md
-    remove-port-mirror.rsc     # rollback for the above
+    configure-port-mirror.rsc     # see docs/setup/01-mikrotik-rb5009-port-mirroring.md
+    remove-port-mirror.rsc        # rollback for the above
 ```
 
 ## Conventions

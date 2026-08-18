@@ -76,9 +76,9 @@ where a bug in one component could hide a symptom in another.
   so `src_ip` on such an alert is your network's public (NAT'd) IP, not
   the internal host's private IP. Keep this in mind when interpreting
   alerts or reasoning about what a resulting temporary block actually
-  covers — see
-  [docs/operations/testing.md](../operations/testing.md) for a concrete
-  example (`scripts/linux/tests/internal/simulate-password-in-clear.sh`).
+  covers — see [docs/operations/testing.md](../operations/testing.md) for
+  examples using the unified simulation runner in
+  [scripts/linux/tests/simulations.py](../../scripts/linux/tests/simulations.py).
 
 ## See also
 
