@@ -30,6 +30,15 @@ follows [Keep a Changelog](https://keepachangelog.com/); dates are
   e.g. `simulate-password-in-clear.sh`), each with its own prereqs and
   README, plus [docs/operations/testing.md](docs/operations/testing.md)
   and a `tail-suricata-eve-alerts.sh` helper.
+- Three more `internal/` simulation scripts:
+  `simulate-browser-crypto-mining.sh` (DNS lookup of a known mining-pool
+  domain), `simulate-tor-activity.sh` (DNS lookup of a `.onion` address),
+  and `simulate-tech-support-scammer.sh` (TLS handshake against AnyDesk's
+  check-in host, simulating a tech-support-scam victim's client). Added
+  `scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh`
+  (curl, dnsutils/dig, openssl) and `dnsutils` to the external prereqs
+  installer, on the assumption that neither test host has any of these
+  tools preinstalled.
 - [ADR 0003](docs/architecture/decisions/0003-ai-engineering-case-study.md):
   recorded the standing directive that this repo is also a case study in
   agentic AI software engineering, and that general AI-optimization

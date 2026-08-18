@@ -48,14 +48,17 @@ Services managed this way in this project: `tzsp2pcap`, `suricata`,
 ## Suricata log inspection
 
 ```bash
+sudo tail -f /var/log/suricata/fast.log
 sudo tail -f /var/log/suricata/eve.json
 sudo tail -f /var/log/suricata/eve.json | jq 'select(.event_type=="alert")'
 ```
 
-Or use the packaged helper (same filter, plus a `-a`/full-record option):
+Use the packaged helpers for the common views:
 
 ```bash
+sudo scripts/linux/tail-suricata-fast-log.sh
 sudo scripts/linux/tail-suricata-eve-alerts.sh
+sudo scripts/linux/tail-suricata-eve-alerts.sh -a
 ```
 
 ## Firewall on the Linux box itself (host-level, not RouterOS)

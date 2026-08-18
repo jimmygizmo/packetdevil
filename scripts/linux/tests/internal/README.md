@@ -36,17 +36,26 @@ infrastructure you don't control. Every script here:
 
 ## Prerequisites
 
-Scripts here currently only need `curl`, which is present on nearly all
-Debian/Ubuntu installs by default. If a future script needs a new tool,
-add an `install-internal-test-tool-prereqs.sh` here following the same
-pattern as
-[external/install-external-test-tool-prereqs.sh](../external/install-external-test-tool-prereqs.sh).
+Run this **on the internal test host**, inside your own LAN behind the
+RB5009:
+
+```bash
+sudo scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh
+```
+
+Assumes a bare/minimal host and installs every tool the scripts below
+depend on explicitly (currently `curl`, `dnsutils` for `dig`, and
+`openssl`) rather than assuming any of them are preinstalled. Add new
+tool dependencies here as new internal test scripts are added.
 
 ## Available scripts
 
 | Script | What it does |
 |---|---|
 | [simulate-password-in-clear.sh](simulate-password-in-clear.sh) | `curl -su user:pass <url>` (default: httpbun.com's Basic Auth test endpoint) — sends dummy credentials over plain HTTP, to trigger/verify cleartext-credential / policy-violation Suricata alerts. |
+| [simulate-browser-crypto-mining.sh](simulate-browser-crypto-mining.sh) | `dig +short <domain> @<resolver>` (default: a known Monero mining-pool domain) — simulates the DNS lookup a cryptojacking browser tab/host would make, to trigger/verify DNS reputation Suricata alerts. |
+| [simulate-tor-activity.sh](simulate-tor-activity.sh) | `dig +short <domain> @<resolver>` (default: a `.onion` test domain) — simulates a host attempting to resolve a Tor hidden service, to trigger/verify Tor-usage policy Suricata alerts. |
+| [simulate-tech-support-scammer.sh](simulate-tech-support-scammer.sh) | `openssl s_client` TLS handshake against AnyDesk's real check-in host — simulates the network pattern of a tech-support-scam victim's freshly installed AnyDesk client, to trigger/verify remote-access-tool Suricata alerts. |
 
 Run any script with `-h`/`--help` for full usage.
 

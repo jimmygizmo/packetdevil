@@ -4,8 +4,9 @@
 #          credentials in cleartext (HTTP Basic Auth over plain HTTP) to an
 #          external site, to confirm Suricata's cleartext-credential /
 #          policy-violation rules fire and packetdevil reacts.
-# Requires: curl installed (present by default on nearly all Debian/Ubuntu
-#           installs); MUST be run from a host INSIDE your own LAN, behind
+# Requires: curl installed (see
+#           scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh);
+#           MUST be run from a host INSIDE your own LAN, behind
 #           the RB5009 (see usage/README) — not from an external host.
 # Rollback: N/A — read-only HTTP request against a public test endpoint,
 #           nothing local to undo.
@@ -84,7 +85,7 @@ if [[ "${skip_confirm}" -ne 1 ]]; then
 fi
 
 if ! command -v curl &>/dev/null; then
-  echo "error: curl is not installed (sudo apt-get install -y curl)." >&2
+  echo "error: curl is not installed. Run scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh first." >&2
   exit 1
 fi
 

@@ -46,15 +46,24 @@ subdirectory's own README for category-specific details.
 
 ## Prerequisites
 
-**External** tests: install `nmap` **on the external host** you'll run
-them from, not on your packetdevil/Suricata box:
+**External** tests: install tools **on the external host** you'll run them
+from, not on your packetdevil/Suricata box — assume a bare/minimal host
+and install everything explicitly, never rely on preinstalled tools:
 ```bash
 sudo scripts/linux/tests/external/install-external-test-tool-prereqs.sh
 ```
 
-**Internal** tests: currently only need `curl`, present by default on
-nearly all Debian/Ubuntu installs — see
-[scripts/linux/tests/internal/README.md](../../scripts/linux/tests/internal/README.md).
+**Internal** tests: install tools **on the internal test host**, inside
+your own LAN behind the RB5009 — same assume-nothing-is-installed
+approach:
+```bash
+sudo scripts/linux/tests/internal/install-internal-test-tool-prereqs.sh
+```
+
+See each subdirectory's README
+([external](../../scripts/linux/tests/external/README.md),
+[internal](../../scripts/linux/tests/internal/README.md)) for exactly
+which tools each installs and why.
 
 ## Safety — read before running anything here
 
@@ -88,6 +97,9 @@ this with printed warnings and an interactive confirmation prompt.
 |---|---|---|---|
 | [scripts/linux/tests/external/simulate-port-scan.sh](../../scripts/linux/tests/external/simulate-port-scan.sh) | External | `nmap -sS -sV -Pn <ip>` against your own public IP, run from an external host. | Suricata logs a recon/port-scan category alert in `eve.json`; `packetdevil` may create a temporary block against the scanning host (the external host you ran it from, or hackertarget.com's scanning IP if you used the web service). |
 | [scripts/linux/tests/internal/simulate-password-in-clear.sh](../../scripts/linux/tests/internal/simulate-password-in-clear.sh) | Internal | `curl -su user:pass <url>` — dummy HTTP Basic Auth credentials sent in cleartext, run from inside your LAN. | Suricata logs a cleartext-credential/policy-violation alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
+| [scripts/linux/tests/internal/simulate-browser-crypto-mining.sh](../../scripts/linux/tests/internal/simulate-browser-crypto-mining.sh) | Internal | `dig +short <domain> @<resolver>` — DNS lookup of a known cryptocurrency mining-pool domain, run from inside your LAN. | Suricata logs a DNS reputation/threat-intel alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
+| [scripts/linux/tests/internal/simulate-tor-activity.sh](../../scripts/linux/tests/internal/simulate-tor-activity.sh) | Internal | `dig +short <domain> @<resolver>` — DNS lookup of a `.onion` (Tor hidden service) address, run from inside your LAN. | Suricata logs a Tor-usage policy alert (query is expected to return NXDOMAIN — the lookup attempt itself is the signal); `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
+| [scripts/linux/tests/internal/simulate-tech-support-scammer.sh](../../scripts/linux/tests/internal/simulate-tech-support-scammer.sh) | Internal | `openssl s_client` TLS handshake against AnyDesk's real check-in host, run from inside your LAN. | Suricata logs a remote-access-tool detection alert; `packetdevil` may create a temporary block against your network's public (NAT'd) IP. |
 
 Remove any resulting rule afterward rather than waiting out the TTL if you
 need connectivity restored immediately — see

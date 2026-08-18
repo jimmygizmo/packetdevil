@@ -41,8 +41,11 @@ Run this **on the external host**, not on your packetdevil/Suricata box:
 sudo scripts/linux/tests/external/install-external-test-tool-prereqs.sh
 ```
 
-Installs every tool the scripts below depend on (currently `nmap`). Add
-new tool dependencies here as new external test scripts are added.
+Assumes a bare/minimal host and installs every tool the scripts below
+depend on explicitly (currently `nmap`, plus `dnsutils` for `dig` ahead of
+future DNS-based external scripts) rather than assuming any of them are
+preinstalled. Add new tool dependencies here as new external test scripts
+are added.
 
 ## Available scripts
 
