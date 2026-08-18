@@ -1,0 +1,48 @@
+
+
+simulations.py will live in /scripts/linux/tests/
+
+do not change any existing scripts, files or directories in here. just create:
+/scripts/linux/tests/simulations.py
+
+it is a command line program which will run the linux commands we currently run in these test/simulation scripts.
+
+It will also handle checking for any prerequisite python module or linux program, setup or configuration which is required
+and then if anything is missing, installing and/or configuring that, specifically for an internal/external test/simulation host.
+
+it will have a --setup argument. when this is present anywhere in the args, it will first check for all prerequisites and required
+setup/config, creation of dirs or files or permission modifications or whatever. if anything is missing or not correct, it will be
+installed and everything made correct. the user can always invoke --setup.
+look at what the internal and external test/simulation host install scripts do and combine that.
+we will do the same setup for an internal or external test/simulation host now.
+
+simulations.py will also take these arguments for running the internal tests/simulations:
+
+--internal-tor - simulate outbound tor activity from an intenal test host
+
+--internal-crypto - simulate outbound crypto-mining activity from an intenal test host
+
+--internal-scammer - simulate outbound scammer remote control activity from an intenal test host
+
+--internal-password - simulate outbound passwords in the clear from an intenal test host
+
+--internal-all - run all outbound simulations from an internal test host
+
+for the first verion, keep it simple and do not support any variations of the commands for the
+simulations but you may abstract out any obvious values such as a hostname into some constant
+variables defined at the top of the program.
+
+the program will also take the following arguments for running external tests/simulations:
+
+--external-scan - simulate inbound port-scanning activity from an external test host
+
+--external-all - run all inbound simulations from an external test host
+
+give this program nice output which includes nice unicode emojis. inform the user of each significant step in the execution with liberal use of unicode emojis.
+after issuing a simulation command but before any possible output, print "- - - - - - - - - - - - - - - - - - - -"
+when there is no output at all from the command for a simulation, print <NO-OUTPUT-RESULTED>.
+after any possible output, again print "- - - - - - - - - - - - - - - - - - - -".
+
+print blank lines between before each major phase of the program execution so the STDOUT is easy to read.
+
+Do not change any readme files yet. just make this new python program which will eventually replace all these scripts in this /scripts/linux/tests/ dir.
