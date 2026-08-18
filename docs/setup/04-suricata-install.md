@@ -16,19 +16,38 @@ Install Suricata, point it at the `dummy0` interface, load a ruleset, and
 confirm `eve.json` alert output is being produced — the integration point
 the Python app depends on.
 
+This repo intentionally keeps Suricata installation separate from the
+`tzsp2pcap` build/install flow. The latter is already fully documented in
+[03-tzsp2pcap-install.md](03-tzsp2pcap-install.md), and the script below
+only manages the Suricata side plus the common Linux tooling used to
+inspect and validate alerts.
+
 ## Prerequisites
 
 - [03-tzsp2pcap-install.md](03-tzsp2pcap-install.md) completed and verified
   (real traffic visible on `dummy0`).
+- The Linux box has the baseline development tools already in place (see
+  [00-prerequisites.md](00-prerequisites.md)); `build-essential` and `git`
+  are part of the system baseline even though they are not used here to
+  rebuild `tzsp2pcap`.
 
 ## Steps
 
-1. **Install Suricata** (OISF's official PPA/repo is recommended over
-   distro-default packages, which lag behind releases):
+1. **Install Suricata and project support tooling** with the repo helper:
+   ```bash
+   sudo scripts/linux/install-suricata.sh
+   ```
+   This installs the Suricata PPA, `suricata`, `jq`, `tcpreplay`, and the
+   build/packet tools commonly used in this repo. It does not duplicate the
+   vendored `tzsp2pcap` build/install flow; that is intentionally covered
+   only in [03-tzsp2pcap-install.md](03-tzsp2pcap-install.md).
+
+   If you prefer to do it manually, the equivalent commands are:
    ```bash
    sudo add-apt-repository ppa:oisf/suricata-stable
    sudo apt update
-   sudo apt install -y suricata
+   sudo apt install -y suricata jq tcpreplay git build-essential libpcap-dev
+   sudo suricata-update
    ```
 
 2. **Configure the capture interface** in `/etc/suricata/suricata.yaml`:
